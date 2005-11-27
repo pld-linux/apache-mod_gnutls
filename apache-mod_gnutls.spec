@@ -4,6 +4,7 @@
 %define		mod_name	gnutls
 %define 	apxs		/usr/sbin/apxs
 Summary:	SSL v3, TLS 1.0 and TLS 1.1 encryption for Apache HTTPD
+Summary(pl):	Szyfrowanie SSL v3, TLS 1.0 i TLS 1.1 dla serwera HTTP Apache
 Name:		apache-mod_%{mod_name}
 Version:	0.2.0
 Release:	0.1
@@ -22,10 +23,21 @@ mod_gnutls uses the GnuTLS library to provide SSL v3, TLS 1.0 and TLS
 but does not use OpenSSL.
 
 Features:
-- Support for SSLv3, TLS 1.0 and TLS 1.1.
+- Support for SSL v3, TLS 1.0 and TLS 1.1.
 - Support for Server Name Indication
 - Distributed SSL Session Cache via Memcached
 - Local SSL Session Cache using DBM
+
+%description -l pl
+mod_gnutls u¿ywa biblioteki GnuTLS do obs³ugi szyfrowania SSL v3, TLS
+1.0 i TLS 1.1 dla serwera HTTP Apache. Pod wzglêdem przeznaczenia jest
+podobny do mod_ssl, ale nie u¿ywa biblioteki OpenSSL.
+
+Mo¿liwo¶ci:
+- obs³uga SSL v3, TLS 1.0 i TLS 1.1
+- obs³uga identyfikacji nazwy serwera (Server Name Indication)
+- rozproszona pamiêæ podrêczna sesji SSL poprzez Memcached
+- lokalna pamiêæ podrêczna sesji SSL korzystaj±ca z DBM
 
 %prep
 %setup -q -n mod_%{mod_name}-%{version}
