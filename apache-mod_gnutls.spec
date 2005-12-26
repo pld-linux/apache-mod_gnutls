@@ -15,6 +15,7 @@ Source0:	http://www.outoforder.cc/downloads/mod_gnutls/mod_gnutls-%{version}.tar
 URL:		http://www.outoforder.cc/projects/apache/mod_gnutls/
 BuildRequires:	apache-devel >= 2.0.42
 BuildRequires:	gnutls-devel >= 1.2.0
+Requires:	apache(modules-api) = %apache_modules_api
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
