@@ -4,7 +4,7 @@
 %define		mod_name	gnutls
 %define 	apxs		/usr/sbin/apxs
 Summary:	SSL v3, TLS 1.0 and TLS 1.1 encryption for Apache HTTPD
-Summary(pl.UTF-8):   Szyfrowanie SSL v3, TLS 1.0 i TLS 1.1 dla serwera HTTP Apache
+Summary(pl.UTF-8):	Szyfrowanie SSL v3, TLS 1.0 i TLS 1.1 dla serwera HTTP Apache
 Name:		apache-mod_%{mod_name}
 Version:	0.2.0
 Release:	0.1
