@@ -1,6 +1,6 @@
 # TODO
 # - with apr_memcache: http://www.outoforder.cc/projects/libs/apr_memcache
-# - make tries to make cert using /dev/random (slow! and perhaps unneccessary)
+# - config file
 %define		mod_name	gnutls
 %define 	apxs		/usr/sbin/apxs
 Summary:	SSL v3, TLS 1.0 and TLS 1.1 encryption for Apache HTTPD
@@ -12,11 +12,19 @@ License:	Apache Group License
 Group:		Networking/Daemons
 Source0:	http://www.outoforder.cc/downloads/mod_gnutls/mod_gnutls-%{version}.tar.bz2
 # Source0-md5:	80ab766a7b9cfbb730e789032ff26d68
+Patch0:		%{name}-libtool.patch
+Patch1:		%{name}-no_certtool.patch
 URL:		http://www.outoforder.cc/projects/apache/mod_gnutls/
+BuildRequires:	apache-apxs
 BuildRequires:	apache-devel >= 2.0.42
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	gnutls-devel >= 1.2.0
+BuildRequires:	libtool
 Requires:	apache(modules-api) = %apache_modules_api
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define         _pkglibdir      %(%{apxs} -q LIBEXECDIR 2>/dev/null)
 
 %description
 mod_gnutls uses the GnuTLS library to provide SSL v3, TLS 1.0 and TLS
@@ -42,8 +50,15 @@ Możliwości:
 
 %prep
 %setup -q -n mod_%{mod_name}-%{version}
+%patch0 -p1
+%patch1 -p1
 
 %build
+%{__libtoolize}
+%{__aclocal} -I m4
+%{__autoheader}
+%{__automake}
+%{__autoconf}
 %configure \
 	--with-apxs=%{apxs} \
 	--with-libgnutls=%{_prefix} \
@@ -52,12 +67,12 @@ Możliwości:
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{_pkglibdir}
+install src/.libs/libmod_gnutls.so $RPM_BUILD_ROOT%{_pkglibdir}/mod_gnutls.so
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%{_pkglibdir}/*
