@@ -1,19 +1,22 @@
 # TODO
 # - with apr_memcache: http://www.outoforder.cc/projects/libs/apr_memcache
-# - config file
 %define		mod_name	gnutls
 %define 	apxs		/usr/sbin/apxs
 Summary:	SSL v3, TLS 1.0 and TLS 1.1 encryption for Apache HTTPD
 Summary(pl.UTF-8):	Szyfrowanie SSL v3, TLS 1.0 i TLS 1.1 dla serwera HTTP Apache
 Name:		apache-mod_%{mod_name}
 Version:	0.2.0
-Release:	0.1
+Release:	0.2
 License:	Apache Group License
 Group:		Networking/Daemons
 Source0:	http://www.outoforder.cc/downloads/mod_gnutls/mod_gnutls-%{version}.tar.bz2
 # Source0-md5:	80ab766a7b9cfbb730e789032ff26d68
+Source1:	%{name}.conf
+Source2:	%{name}-dhfile
+Source3:	%{name}-rsafile
 Patch0:		%{name}-libtool.patch
 Patch1:		%{name}-no_certtool.patch
+Patch2:		%{name}-paths.patch
 URL:		http://www.outoforder.cc/projects/apache/mod_gnutls/
 BuildRequires:	apache-apxs
 BuildRequires:	apache-devel >= 2.0.42
@@ -25,6 +28,7 @@ Requires:	apache(modules-api) = %apache_modules_api
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _pkglibdir      %(%{apxs} -q LIBEXECDIR 2>/dev/null)
+%define		_sysconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)
 
 %description
 mod_gnutls uses the GnuTLS library to provide SSL v3, TLS 1.0 and TLS
@@ -32,10 +36,10 @@ mod_gnutls uses the GnuTLS library to provide SSL v3, TLS 1.0 and TLS
 but does not use OpenSSL.
 
 Features:
-- Support for SSL v3, TLS 1.0 and TLS 1.1.
-- Support for Server Name Indication
-- Distributed SSL Session Cache via Memcached
-- Local SSL Session Cache using DBM
+ - Support for SSL v3, TLS 1.0 and TLS 1.1.
+ - Support for Server Name Indication
+ - Distributed SSL Session Cache via Memcached
+ - Local SSL Session Cache using DBM
 
 %description -l pl.UTF-8
 mod_gnutls używa biblioteki GnuTLS do obsługi szyfrowania SSL v3, TLS
@@ -43,15 +47,16 @@ mod_gnutls używa biblioteki GnuTLS do obsługi szyfrowania SSL v3, TLS
 podobny do mod_ssl, ale nie używa biblioteki OpenSSL.
 
 Możliwości:
-- obsługa SSL v3, TLS 1.0 i TLS 1.1
-- obsługa identyfikacji nazwy serwera (Server Name Indication)
-- rozproszona pamięć podręczna sesji SSL poprzez Memcached
-- lokalna pamięć podręczna sesji SSL korzystająca z DBM
+ - obsługa SSL v3, TLS 1.0 i TLS 1.1
+ - obsługa identyfikacji nazwy serwera (Server Name Indication)
+ - rozproszona pamięć podręczna sesji SSL poprzez Memcached
+ - lokalna pamięć podręczna sesji SSL korzystająca z DBM
 
 %prep
 %setup -q -n mod_%{mod_name}-%{version}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__libtoolize}
@@ -63,16 +68,31 @@ Możliwości:
 	--with-apxs=%{apxs} \
 	--with-libgnutls=%{_prefix} \
 	--without-apr-memcache
+
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_pkglibdir}
+install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_sysconfdir}/{conf.d,tls}}
 install src/.libs/libmod_gnutls.so $RPM_BUILD_ROOT%{_pkglibdir}/mod_gnutls.so
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/conf.d/40_mod_gnutls.conf
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/tls/dhfile
+install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/tls/rsafile
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+%service -q httpd restart
+
+%postun
+if [ "$1" = "0" ]; then
+	%service -q httpd restart
+fi
+
 %files
 %defattr(644,root,root,755)
-%{_pkglibdir}/*
+%attr(750,root,root) %dir %{_sysconfdir}/tls
+%attr(640,root,root) %verify(not md5 mtime size) %{_sysconfdir}/tls/*
+%attr(640,root,root) %verify(not md5 mtime size) %{_sysconfdir}/conf.d/*_mod_gnutls.conf
+%attr(755,root,root) %{_pkglibdir}/*
