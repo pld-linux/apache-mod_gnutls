@@ -1,5 +1,3 @@
-# TODO
-# - with apr_memcache: http://www.outoforder.cc/projects/libs/apr_memcache
 %define		mod_name	gnutls
 %define 	apxs		/usr/sbin/apxs
 Summary:	SSL v3, TLS 1.0 and TLS 1.1 encryption for Apache HTTPD
@@ -20,6 +18,7 @@ Patch2:		%{name}-paths.patch
 URL:		http://www.outoforder.cc/projects/apache/mod_gnutls/
 BuildRequires:	apache-apxs
 BuildRequires:	apache-devel >= 2.0.42
+BuildRequires:	apr_memcache-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	gnutls-devel >= 1.2.0
@@ -83,16 +82,23 @@ install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/tls/rsafile
 rm -rf $RPM_BUILD_ROOT
 
 %post
+if [ "$1" = "1" ]; then
+	echo "Generating dhfile/rsafile - this may take some time..."
+        d=/etc/httpd/tls
+        [ -f "$d/dhfile" ] || /usr/bin/certtool --generate-dh-params --bits 1024 --outfile $d/dhfile
+        [ -f "$d/rsafile" ] || /usr/bin/certtool --generate-privkey --bits 512 --outfile $d/rsafile
+fi
 %service -q httpd restart
 
 %postun
 if [ "$1" = "0" ]; then
 	%service -q httpd restart
+	rm -f /etc/httpd/tls/{dhfile,rsafile}
 fi
 
 %files
 %defattr(644,root,root,755)
 %attr(750,root,root) %dir %{_sysconfdir}/tls
-%attr(640,root,root) %verify(not md5 mtime size) %{_sysconfdir}/tls/*
+%dir %{_sysconfdir}/tls
 %attr(640,root,root) %verify(not md5 mtime size) %{_sysconfdir}/conf.d/*_mod_gnutls.conf
 %attr(755,root,root) %{_pkglibdir}/*
