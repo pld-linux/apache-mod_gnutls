@@ -16,7 +16,7 @@ Patch0:		%{name}-libtool.patch
 Patch1:		%{name}-no_certtool.patch
 Patch2:		%{name}-paths.patch
 URL:		http://www.outoforder.cc/projects/apache/mod_gnutls/
-BuildRequires:	apache-apxs
+BuildRequires:	%{apxs}
 BuildRequires:	apache-devel >= 2.0.42
 BuildRequires:	apr_memcache-devel
 BuildRequires:	autoconf
