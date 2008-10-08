@@ -3,25 +3,24 @@
 Summary:	SSL v3, TLS 1.0 and TLS 1.1 encryption for Apache HTTPD
 Summary(pl.UTF-8):	Szyfrowanie SSL v3, TLS 1.0 i TLS 1.1 dla serwera HTTP Apache
 Name:		apache-mod_%{mod_name}
-Version:	0.2.0
-Release:	0.2
+Version:	0.5.2
+Release:	0.1
 License:	Apache Group License
 Group:		Networking/Daemons
 Source0:	http://www.outoforder.cc/downloads/mod_gnutls/mod_gnutls-%{version}.tar.bz2
-# Source0-md5:	80ab766a7b9cfbb730e789032ff26d68
+# Source0-md5:	6f01c8941e00344b5867633b4a5e21c8
 Source1:	%{name}.conf
 Source2:	%{name}-dhfile
 Source3:	%{name}-rsafile
 Patch0:		%{name}-libtool.patch
-Patch1:		%{name}-no_certtool.patch
-Patch2:		%{name}-paths.patch
+Patch1:		%{name}-paths.patch
 URL:		http://www.outoforder.cc/projects/apache/mod_gnutls/
 BuildRequires:	%{apxs}
 BuildRequires:	apache-devel >= 2.0.42
 BuildRequires:	apr_memcache-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	gnutls-devel >= 1.2.0
+BuildRequires:	gnutls-devel >= 2.4.0
 BuildRequires:	libtool
 Requires:	apache(modules-api) = %apache_modules_api
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -55,7 +54,6 @@ Możliwości:
 %setup -q -n mod_%{mod_name}-%{version}
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %build
 %{__libtoolize}
