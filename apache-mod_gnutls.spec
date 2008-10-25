@@ -6,7 +6,7 @@ Name:		apache-mod_%{mod_name}
 Version:	0.5.2
 Release:	0.1
 License:	Apache Group License
-Group:		Networking/Daemons
+Group:		Networking/Daemons/HTTP
 Source0:	http://www.outoforder.cc/downloads/mod_gnutls/mod_gnutls-%{version}.tar.bz2
 # Source0-md5:	6f01c8941e00344b5867633b4a5e21c8
 Source1:	%{name}.conf
