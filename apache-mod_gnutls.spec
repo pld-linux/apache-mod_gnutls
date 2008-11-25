@@ -3,12 +3,12 @@
 Summary:	SSL v3, TLS 1.0 and TLS 1.1 encryption for Apache HTTPD
 Summary(pl.UTF-8):	Szyfrowanie SSL v3, TLS 1.0 i TLS 1.1 dla serwera HTTP Apache
 Name:		apache-mod_%{mod_name}
-Version:	0.5.2
+Version:	0.5.3
 Release:	0.1
 License:	Apache Group License
 Group:		Networking/Daemons/HTTP
 Source0:	http://www.outoforder.cc/downloads/mod_gnutls/mod_gnutls-%{version}.tar.bz2
-# Source0-md5:	6f01c8941e00344b5867633b4a5e21c8
+# Source0-md5:	ef60af1f2763a7a2c3fdba952b7d25e0
 Source1:	%{name}.conf
 Source2:	%{name}-dhfile
 Source3:	%{name}-rsafile
@@ -17,7 +17,7 @@ Patch1:		%{name}-paths.patch
 URL:		http://www.outoforder.cc/projects/apache/mod_gnutls/
 BuildRequires:	%{apxs}
 BuildRequires:	apache-devel >= 2.0.42
-BuildRequires:	apr_memcache-devel
+BuildRequires:	apr_memcache-devel >= 0.7.0
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	gnutls-devel >= 2.4.0
@@ -62,9 +62,7 @@ Możliwości:
 %{__automake}
 %{__autoconf}
 %configure \
-	--with-apxs=%{apxs} \
-	--with-libgnutls=%{_prefix} \
-	--without-apr-memcache
+	--with-apxs=%{apxs} 
 
 %{__make}
 
@@ -99,4 +97,4 @@ fi
 %attr(750,root,root) %dir %{_sysconfdir}/tls
 %dir %{_sysconfdir}/tls
 %attr(640,root,root) %verify(not md5 mtime size) %{_sysconfdir}/conf.d/*_mod_gnutls.conf
-%attr(755,root,root) %{_pkglibdir}/*
+%attr(755,root,root) %{_pkglibdir}/mod_gnutls.so
