@@ -57,7 +57,6 @@ Możliwości:
 %patch1 -p1
 
 %build
-cd apache2
 %{__libtoolize}
 %{__aclocal} -I m4
 %{__autoheader}
