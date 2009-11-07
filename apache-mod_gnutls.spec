@@ -3,12 +3,12 @@
 Summary:	SSL v3, TLS 1.0 and TLS 1.1 encryption for Apache HTTPD
 Summary(pl.UTF-8):	Szyfrowanie SSL v3, TLS 1.0 i TLS 1.1 dla serwera HTTP Apache
 Name:		apache-mod_%{mod_name}
-Version:	0.5.4
+Version:	0.5.5
 Release:	0.1
 License:	Apache Group License
 Group:		Networking/Daemons/HTTP
 Source0:	http://www.outoforder.cc/downloads/mod_gnutls/mod_gnutls-%{version}.tar.bz2
-# Source0-md5:	4be7daab0e4b0af9b2eff104fc61af87
+# Source0-md5:	53aef6d0c295fc2b7d5d2ee4576e6884
 Source1:	%{name}.conf
 Source2:	%{name}-dhfile
 Source3:	%{name}-rsafile
