@@ -1,12 +1,12 @@
-diff -burNp mod_gnutls-0.5.2/src/gnutls_config.c mod_gnutls-0.5.2-new/src/gnutls_config.c
---- mod_gnutls-0.5.2/src/gnutls_config.c	2008-02-20 21:10:43.000000000 +0100
-+++ mod_gnutls-0.5.2-new/src/gnutls_config.c	2008-10-08 10:05:00.219949063 +0200
-@@ -563,7 +563,7 @@ void *mgs_config_server_create(apr_pool_
+diff -burNp mod_gnutls-0.5.9/src/gnutls_config.c mod_gnutls-0.5.9-dud/src/gnutls_config.c
+--- mod_gnutls-0.5.9/src/gnutls_config.c	2010-09-24 08:51:30.000000000 +0200
++++ mod_gnutls-0.5.9-dud/src/gnutls_config.c	2010-09-29 11:33:08.266307868 +0200
+@@ -609,7 +609,7 @@ void *mgs_config_server_create(apr_pool_
      sc->certs_x509_num = 0;
      sc->cache_timeout = apr_time_from_sec(300);
-     sc->cache_type = mgs_cache_dbm;
+     sc->cache_type = mgs_cache_none;
 -    sc->cache_config = ap_server_root_relative(p, "conf/gnutls_cache");
 +    sc->cache_config = ap_server_root_relative(p, "tls/gnutls_cache");
+     sc->tickets = 1; /* by default enable session tickets */
  
      sc->client_verify_mode = GNUTLS_CERT_IGNORE;
- 
